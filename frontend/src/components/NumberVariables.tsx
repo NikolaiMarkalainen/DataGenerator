@@ -8,26 +8,25 @@ enum SliderFormats {
 }
 
 export const NumberVariables = () => {
-
-  //slider state
   
   const [sliderValue, setSliderValue] = useState<number>();
   const [sliderRange, setSliderRange] = useState<[number, number]>([0, 10]);
   const [sliderMin, setSliderMin] = useState<number>(0);
-  const [sliderMax, setSliderMax] = useState<number>(0);
+  const [sliderMax, setSliderMax] = useState<number>(10);
   const [sliderStep, setSliderStep] =useState<number>(1);
   const [decimalPrecision, setDecimalPrecision] = useState<number>(0);
   const [decimalError, setDecimalError] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<IDropdownOption>();
 
+  const [isDecimal, setIsDecimal] = useState<boolean>(false);
+
   const dropDownOptions = [
       {key: 0, text: 'Primary numbers'},
       {key: 1, text: 'Decimal numbers'},
-      {key: 2, text: 'Percentage'}
   ];
 
   const sliderValueFormat = (value: number): string =>{
-    if(selectedItem?.key === SliderFormats.Float) {
+    if(isDecimal) {
       const scaledValue = value / Math.pow(10, decimalPrecision);
       return scaledValue.toFixed(decimalPrecision);
     } 
@@ -48,7 +47,7 @@ export const NumberVariables = () => {
     }
     const numberInput = Number(input);
     if(precision){
-      if(/^\d*$/.test(input) && numberInput <= 10){
+      if(/^\d*$/.test(input) && numberInput <= 4){
           setState(numberInput);
           setDecimalError(false);
       } else {
@@ -63,16 +62,15 @@ export const NumberVariables = () => {
   };
 
 
-  const handleDropdownChange = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption): void => {
-    setSelectedItem(item);
-    console.log(selectedItem)
-  };
 
 
+
+  const handleToggleChange = (e:React.MouseEvent<HTMLElement>, checked?: boolean ) => {
+    setIsDecimal(checked || false);
+  }
   return (
-    <Stack horizontal style={{backgroundColor:'red'}}>
-      <Stack grow={1} style={{backgroundColor: 'green'}}>
-        <Stack.Item>
+    <Stack horizontal>
+      <Stack tokens={{ padding: 12, childrenGap: 8 }} grow={1}>
           <TextField
               label='Enter integer minimum value'
               value={sliderMin.toString()}
@@ -83,19 +81,24 @@ export const NumberVariables = () => {
             value={sliderMax.toString()}
             onChange={(input, text) => validateInputFormat(text || '', setSliderMax)}
           />
-          {selectedItem?.key === SliderFormats.Float && (
+          {isDecimal && (
           <TextField
             label='Decimal precision'
             maxLength={2}
-            errorMessage={decimalError ? "Decimal precision is at max 10" : ""}
+            errorMessage={decimalError ? "Decimal precision is at max 4" : ""}
             value={decimalPrecision.toString() || '0'}
             onChange={(input, text) => validateInputFormat(text || '', setDecimalPrecision, true)}
           />
           )}
-        </Stack.Item>
       </Stack>
-      <Stack grow={5} style={{ backgroundColor: 'yellow'}}>
-        <Stack.Item>
+      <Stack tokens={{ padding: 18}} grow={7}>
+          <Toggle
+            label="Set Decimal"
+            onText='Decimal'
+            offText='Primary'
+            checked={isDecimal}
+            onChange={handleToggleChange}
+          />
           <Slider 
             label="Integer range" 
             ranged
@@ -107,13 +110,6 @@ export const NumberVariables = () => {
             onChanged={(e, value, range) => (onSliderChange(value, range))}
             valueFormat={sliderValueFormat}
           />
-          <Dropdown
-          placeholder="Select number format"
-          selectedKey={selectedItem ? selectedItem.key : undefined}
-          onChange={handleDropdownChange}
-          options={dropDownOptions}
-          />
-        </Stack.Item>
       </Stack>
     </Stack>
 
