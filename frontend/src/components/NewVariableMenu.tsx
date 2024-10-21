@@ -1,8 +1,9 @@
 import { Dropdown, FontIcon, IDropdownOption, mergeStyles, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { variableMenuItems } from "../types/variableEnum";
 import { NumberVariables } from "./NumberVariables";
-import { IVariable } from "../types/IVariable";
+import { IVariable, VariableOptions } from "../types/IVariable";
+import { INumberVariable } from "../types/INumberVariable";
 
 type Props = {
     index: number;
@@ -22,6 +23,7 @@ export const NewVariableMenu = (props: Props) => {
 
     const [selectedItem, setSelectedItem] = useState<IDropdownOption>();
     const [variableName, setVariableName] = useState<string>('');
+    const [variableContent, setVariableContent] = useState<VariableOptions>();
 
     const variablesMenuOptions = [
         {key: 0, text: "Number"},
@@ -39,9 +41,18 @@ export const NewVariableMenu = (props: Props) => {
 
     const handleSubmit = () => {
         if(variableName && selectedItem) {
-            props.onChange(props.index, {name: variableName, type: selectedItem.text});
+            // TODO: add error handling for instances where stuff doesnt work
+            props.onChange(props.index, {name: variableName, type: selectedItem.text, variableData: variableContent}, );
         }
-    }
+    };
+
+    const handleNumberVariableChange = (numberVariables: VariableOptions) => {
+        setVariableContent(numberVariables);
+    };
+
+    useEffect(() => {
+        handleSubmit();
+    }, [variableContent])
 
     return(
         <Stack tokens={{childrenGap: 16}}>
@@ -57,12 +68,12 @@ export const NewVariableMenu = (props: Props) => {
                     options={variablesMenuOptions}
                 />
             {selectedItem?.key === variableMenuItems.NUMBER && (
-                <NumberVariables/>
+                <NumberVariables onChange={handleNumberVariableChange}/>
             )}
-            <PrimaryButton text="Submit Variable" onClick={handleSubmit}/>
             <Stack.Item align="end">
-                <FontIcon aria-label="asd" iconName="Delete" className={iconClass} onClick={props.onDelete}/>
+                <FontIcon iconName="Delete" className={iconClass} onClick={props.onDelete}/>
             </Stack.Item>
+
         </Stack>
     )
 };

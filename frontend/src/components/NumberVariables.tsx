@@ -1,29 +1,22 @@
 import React, { useEffect } from 'react';
-import { Slider, Stack, TextField, Toggle, Dropdown , IDropdownOption, DropdownMenuItemType} from '@fluentui/react';
+import { Slider, Stack, TextField, Toggle, Dropdown , IDropdownOption, DropdownMenuItemType, DefaultButton} from '@fluentui/react';
 import { useState } from 'react';
+import { INumberVariable } from '../types/INumberVariable';
 
-enum SliderFormats {
-  Integer = 0,
-  Float = 1,
+type Props = {
+  onChange: (numberVariables: INumberVariable) => void;
 }
 
-export const NumberVariables = () => {
+
+export const NumberVariables = (props: Props) => {
   
   const [sliderValue, setSliderValue] = useState<number>();
-  const [sliderRange, setSliderRange] = useState<[number, number]>([0, 10]);
   const [sliderMin, setSliderMin] = useState<number>(0);
   const [sliderMax, setSliderMax] = useState<number>(10);
   const [sliderStep, setSliderStep] =useState<number>(1);
   const [decimalPrecision, setDecimalPrecision] = useState<number>(0);
   const [decimalError, setDecimalError] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<IDropdownOption>();
-
   const [isDecimal, setIsDecimal] = useState<boolean>(false);
-
-  const dropDownOptions = [
-      {key: 0, text: 'Primary numbers'},
-      {key: 1, text: 'Decimal numbers'},
-  ];
 
   const sliderValueFormat = (value: number): string =>{
     if(isDecimal) {
@@ -59,15 +52,22 @@ export const NumberVariables = () => {
         setState(numberInput)
       }
     }
+    
   };
-
-
-
 
 
   const handleToggleChange = (e:React.MouseEvent<HTMLElement>, checked?: boolean ) => {
     setIsDecimal(checked || false);
   }
+
+  const handlePropertySubmit = () => {
+    props.onChange({ 
+      min: sliderMin, 
+      max: sliderMax, 
+      decimalPrecision: decimalPrecision, 
+      decimal: isDecimal})
+  }
+
   return (
     <Stack horizontal>
       <Stack tokens={{ padding: 12, childrenGap: 8 }} grow={1}>
@@ -110,6 +110,7 @@ export const NumberVariables = () => {
             onChanged={(e, value, range) => (onSliderChange(value, range))}
             valueFormat={sliderValueFormat}
           />
+          <DefaultButton text="Set Property values" onClick={handlePropertySubmit}/>
       </Stack>
     </Stack>
 
