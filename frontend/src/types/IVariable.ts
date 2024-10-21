@@ -5,6 +5,6 @@ export type VariableOptions = INumberVariable
 
 export interface IVariable {
     name: string;
-    type: string;
+    type: number | string;
     variableData?: VariableOptions;
 }

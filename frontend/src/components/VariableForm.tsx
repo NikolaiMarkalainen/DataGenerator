@@ -1,39 +1,45 @@
 import React, { useEffect } from 'react';
-import {NumberVariables} from './NumberVariables'
 import { Stack } from '@fluentui/react';
 import { NewVariableMenu } from './NewVariableMenu';
 import { DefaultButton } from '@fluentui/react';
 import { useState } from 'react';
 import { IVariable } from '../types/IVariable';
 import { PrimaryButton } from '@fluentui/react';
-import { DataPreview } from './DataPreview';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
+import { addVariable, deleteVariable, updateVariable } from '../reducers/variableReducer';
+
 export const VariableForm = () => {
 
 
-  const [variables, setVariables] = useState<IVariable[]>([]);
   const [variableSubmitBlock, setVariableSubmitBlock] = useState<boolean>(true);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const variables = useSelector((s: RootState) => s.variables.variables);
+
   useEffect(() => {
     // the data stays pure and we can submit to back end
     setVariableSubmitBlock(variables.every(variable => variable.variableData === undefined));
 
   }, [variables]);
-  console.log(variableSubmitBlock);
+
+  
   const addNewVariable = () => {
-    setVariables([...variables, {name: "", type: ""}])
+    const newVariable = { name: "", type: ""};
+    // new redux variable
+    dispatch(addVariable(newVariable))
   };
 
   const handleVariableChange = (index: number, variableData: IVariable) => {
-    const updatedVariables = [...variables];
-    updatedVariables[index] = variableData;
-    setVariables(updatedVariables);
+    // updating to redux store
+    dispatch(updateVariable({index, variable: variableData}));
   };
 
   const handleVariableDelete = (index: number) => {
-    const updatedVariables = variables.filter((_, i) => i !== index);
-    setVariables(updatedVariables);
+    //delete by id
+    dispatch(deleteVariable(index));
   };
 
   const moveToPreview = () => {
@@ -41,6 +47,7 @@ export const VariableForm = () => {
     navigate('/preview');
   }
   
+  console.log("VARIABLES", variables);
   //new variable
   return(
     <Stack tokens={{childrenGap: 16, padding: 12}}>
