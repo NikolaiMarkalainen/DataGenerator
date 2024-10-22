@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { variableMenuItems } from "../types/variableEnum";
 import { NumberVariables } from "./variables/NumberVariables";
 import { IVariable, VariableOptions } from "../types/IVariable";
-import { CityString } from "./variables/CityString";
 import { OpenString } from "./variables/OpenString";
 import { FixedString } from "./variables/FixedString";
 import { CustomObject } from "./variables/CustomObject";
 import { RandomId } from "./variables/RandomId";
+import { CountrString } from "./variables/CountryString";
 
 
 type Props = {
@@ -37,7 +37,7 @@ export const NewVariableMenu = (props: Props) => {
         {key: variableMenuItems.FIXED_STRING, text: "Fixed String"},
         {key: variableMenuItems.RANDOM_FIRST_NAME, text: "Random First Name"},
         {key: variableMenuItems.RANDOM_LAST_NAME, text: "Random Last Name"},
-        {key: variableMenuItems.RANDOM_CITY, text: "Random City"},
+        {key: variableMenuItems.RANDOM_COUNTRY, text: "Random Country"},
         {key: variableMenuItems.RANDOM_CUSTOM_OBJECT, text: "Custom Object"},
         {key: variableMenuItems.RANDOM_ID, text: "Unique ID"},
     ];
@@ -54,7 +54,6 @@ export const NewVariableMenu = (props: Props) => {
     };
 
     const handleVariableChange = (content: VariableOptions) => {
-        console.log("CONTENT SUBMIT", content);
         setVariableContent(content);
     };
 
@@ -66,8 +65,8 @@ export const NewVariableMenu = (props: Props) => {
                 return <OpenString onChange={handleVariableChange}/>
             case variableMenuItems.FIXED_STRING:
                 return <FixedString onChange={handleVariableChange}/>
-            case variableMenuItems.RANDOM_CITY:
-                return <CityString />
+            case variableMenuItems.RANDOM_COUNTRY:
+                return <CountrString onChange={handleVariableChange}/>
             case variableMenuItems.RANDOM_CUSTOM_OBJECT:
                 return <CustomObject/>
             case variableMenuItems.RANDOM_ID:

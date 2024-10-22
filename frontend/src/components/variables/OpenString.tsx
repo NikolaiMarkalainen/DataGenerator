@@ -19,9 +19,6 @@ export const OpenString  = (props: Props) => {
         })
     }
 
-    useEffect(() => {
-
-    }, )
     return(
         <Stack tokens={{padding: 12, childrenGap: 8}} horizontalAlign="start">
             <TextField
