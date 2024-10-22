@@ -81,6 +81,11 @@ export const NewVariableMenu = (props: Props) => {
         handleSubmit();
     }, [variableContent])
 
+    useEffect(() => {
+        if(selectedItem?.key === variableMenuItems.RANDOM_FIRST_NAME || selectedItem?.key === variableMenuItems.RANDOM_LAST_NAME){
+            handleVariableChange({useProperty: true});
+        }
+    }, [selectedItem])
     return(
         <Stack tokens={{childrenGap: 16}}>
                 <TextField
