@@ -68,7 +68,7 @@ export const NewVariableMenu = (props: Props) => {
             case variableMenuItems.RANDOM_COUNTRY:
                 return <CountrString onChange={handleVariableChange}/>
             case variableMenuItems.RANDOM_CUSTOM_OBJECT:
-                return <CustomObject/>
+                return <CustomObject onChange={handleVariableChange}/>
             case variableMenuItems.RANDOM_ID:
                 return <RandomId/>
             default:
