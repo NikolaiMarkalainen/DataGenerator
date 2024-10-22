@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Slider, Stack, TextField, Toggle, Dropdown , IDropdownOption, DropdownMenuItemType, DefaultButton} from '@fluentui/react';
 import { useState } from 'react';
-import { INumberVariable } from '../types/INumberVariable';
+import { INumberVariable } from '../../types/INumberVariable';
 
 type Props = {
   onChange: (numberVariables: INumberVariable) => void;

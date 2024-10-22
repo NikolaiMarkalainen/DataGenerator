@@ -7,4 +7,5 @@ export enum variableMenuItems {
     RANDOM_LAST_NAME = 4,
     RANDOM_CITY = 5,
     RANDOM_CUSTOM_OBJECT = 6, 
+    RANDOM_ID = 7,
 }

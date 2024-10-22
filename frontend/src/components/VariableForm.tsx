@@ -60,12 +60,11 @@ export const VariableForm = () => {
           onDelete={() => handleVariableDelete(index)}
         />
       ))}
-        <PrimaryButton text="Continue" onClick={moveToPreview} disabled={variableSubmitBlock}/>
-
         <DefaultButton
-          text="Add variable"
+          text="Add new"
           onClick={addNewVariable}
         />
+        <PrimaryButton text="Continue" onClick={moveToPreview} disabled={variableSubmitBlock}/>
 
     </Stack>
   )

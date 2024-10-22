@@ -1,8 +1,13 @@
 import { Dropdown, FontIcon, IDropdownOption, mergeStyles, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { variableMenuItems } from "../types/variableEnum";
-import { NumberVariables } from "./NumberVariables";
+import { NumberVariables } from "./variables/NumberVariables";
 import { IVariable, VariableOptions } from "../types/IVariable";
+import { CityString } from "./variables/CityString";
+import { OpenString } from "./variables/OpenString";
+import { FixedString } from "./variables/FixedString";
+import { CustomObject } from "./variables/CustomObject";
+import { RandomId } from "./variables/RandomId";
 
 
 type Props = {
@@ -10,7 +15,7 @@ type Props = {
     variable: IVariable;
     onChange: (index: number, variableData: IVariable) => void;
     onDelete: () => void;
-}
+};
 
 const iconClass = mergeStyles({
     fontSize: 24,
@@ -18,7 +23,7 @@ const iconClass = mergeStyles({
     padding: 8,
     width: 24,
     alignContent: 'end'
-})
+});
 
 export const NewVariableMenu = (props: Props) => {
 
@@ -30,10 +35,11 @@ export const NewVariableMenu = (props: Props) => {
         {key: variableMenuItems.NUMBER, text: "Number"},
         {key: variableMenuItems.OPEN_STRING, text: "Open String"},
         {key: variableMenuItems.FIXED_STRING, text: "Fixed String"},
-        {key: variableMenuItems.RANDOM_FIRST_NAME, text: "Random first name string"},
-        {key: variableMenuItems.RANDOM_LAST_NAME, text: "Random last name string"},
+        {key: variableMenuItems.RANDOM_FIRST_NAME, text: "Random First Name"},
+        {key: variableMenuItems.RANDOM_LAST_NAME, text: "Random Last Name"},
         {key: variableMenuItems.RANDOM_CITY, text: "Random City"},
         {key: variableMenuItems.RANDOM_CUSTOM_OBJECT, text: "Custom Object"},
+        {key: variableMenuItems.RANDOM_ID, text: "Unique ID"},
     ];
 
     const handleDropdownChange = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption) => {
@@ -49,6 +55,25 @@ export const NewVariableMenu = (props: Props) => {
 
     const handleNumberVariableChange = (numberVariables: VariableOptions) => {
         setVariableContent(numberVariables);
+    };
+
+    const renderVariableComponent = () => {
+        switch(selectedItem?.key) {
+            case variableMenuItems.NUMBER:
+                return <NumberVariables onChange={handleNumberVariableChange}/>
+            case variableMenuItems.OPEN_STRING:
+                return <OpenString/>
+            case variableMenuItems.FIXED_STRING:
+                return <FixedString/>
+            case variableMenuItems.RANDOM_CITY:
+                return <CityString />
+            case variableMenuItems.RANDOM_CUSTOM_OBJECT:
+                return <CustomObject/>
+            case variableMenuItems.RANDOM_ID:
+                return <RandomId/>
+            default:
+                return null;
+        };
     };
 
     useEffect(() => {
@@ -68,14 +93,10 @@ export const NewVariableMenu = (props: Props) => {
                     onChange={handleDropdownChange}
                     options={variablesMenuOptions}
                 />
-            {(selectedItem?.key === variableMenuItems.NUMBER) && (
-                <NumberVariables onChange={handleNumberVariableChange}/>
-            )}
+            {renderVariableComponent()}
             <Stack.Item align="end">
-                <FontIcon iconName="Accept" className={iconClass} onClick={handleSubmit}/>
                 <FontIcon iconName="Delete" className={iconClass} onClick={props.onDelete}/>
             </Stack.Item>
-
         </Stack>
     )
 };
