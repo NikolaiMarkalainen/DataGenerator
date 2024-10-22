@@ -1,0 +1,3 @@
+FIRSTNAMES: https://github.com/dominictarr/random-name/blob/master/first-names.json
+COUNTRIES: https://gist.github.com/keeguon/2310008?permalink_comment_id=4524028#gistcomment-4524028
+SURNAMES: https://github.com/terryweiss/ink-collector/blob/master/tests/nottests/last.names.json
