@@ -1,6 +1,8 @@
+import { IFixedString } from "./IFixedString";
 import { INumberVariable } from "./INumberVariable";
+import { IOpenString } from "./IOpenString";
 
-export type VariableOptions = INumberVariable 
+export type VariableOptions = INumberVariable | IFixedString | IOpenString
 
 
 export interface IVariable {

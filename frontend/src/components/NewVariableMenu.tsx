@@ -53,18 +53,19 @@ export const NewVariableMenu = (props: Props) => {
         }
     };
 
-    const handleNumberVariableChange = (numberVariables: VariableOptions) => {
-        setVariableContent(numberVariables);
+    const handleVariableChange = (content: VariableOptions) => {
+        console.log("CONTENT SUBMIT", content);
+        setVariableContent(content);
     };
 
     const renderVariableComponent = () => {
         switch(selectedItem?.key) {
             case variableMenuItems.NUMBER:
-                return <NumberVariables onChange={handleNumberVariableChange}/>
+                return <NumberVariables onChange={handleVariableChange}/>
             case variableMenuItems.OPEN_STRING:
-                return <OpenString/>
+                return <OpenString onChange={handleVariableChange}/>
             case variableMenuItems.FIXED_STRING:
-                return <FixedString/>
+                return <FixedString onChange={handleVariableChange}/>
             case variableMenuItems.RANDOM_CITY:
                 return <CityString />
             case variableMenuItems.RANDOM_CUSTOM_OBJECT:
@@ -85,6 +86,7 @@ export const NewVariableMenu = (props: Props) => {
                 <TextField
                     label="Write variable name"
                     value={variableName ?? props.variable.name}
+                    description="This will be the key of the variable in every instance"
                     onChange={(e, value) => setVariableName(value || "")}
                 />
                 <Dropdown

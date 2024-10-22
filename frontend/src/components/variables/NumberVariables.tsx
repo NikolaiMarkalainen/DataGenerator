@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { Slider, Stack, TextField, Toggle, Dropdown , IDropdownOption, DropdownMenuItemType, DefaultButton} from '@fluentui/react';
 import { useState } from 'react';
 import { INumberVariable } from '../../types/INumberVariable';
+import { validateInputFormat } from '../helpers/validationHelper';
 
 type Props = {
-  onChange: (numberVariables: INumberVariable) => void;
+  onChange: (variableContents: INumberVariable) => void;
 }
 
 
@@ -32,29 +33,6 @@ export const NumberVariables = (props: Props) => {
   const onSliderChange = (value: number, range?: [number, number]) => {
     setSliderValue(value);
   };
-
-  const validateInputFormat = (input: string, setState: React.Dispatch<React.SetStateAction<number>>, precision?: boolean) => {
-    if(input === "") {
-      setState(0);
-      return;
-    }
-    const numberInput = Number(input);
-    if(precision){
-      if(/^\d*$/.test(input) && numberInput <= 4){
-          setState(numberInput);
-          setDecimalError(false);
-      } else {
-        setDecimalError(true);
-      }
-    } 
-    else {
-      if(/^\d*$/.test(input)) {
-        setState(numberInput)
-      }
-    }
-    
-  };
-
 
   const handleToggleChange = (e:React.MouseEvent<HTMLElement>, checked?: boolean ) => {
     setIsDecimal(checked || false);
@@ -87,7 +65,7 @@ export const NumberVariables = (props: Props) => {
             maxLength={2}
             errorMessage={decimalError ? "Decimal precision is at max 4" : ""}
             value={decimalPrecision.toString() || '0'}
-            onChange={(input, text) => validateInputFormat(text || '', setDecimalPrecision, true)}
+            onChange={(input, text) => validateInputFormat(text || '', setDecimalPrecision, true, setDecimalError)}
           />
           )}
       </Stack>
