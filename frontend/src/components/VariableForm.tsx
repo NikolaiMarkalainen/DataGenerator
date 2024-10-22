@@ -47,7 +47,6 @@ export const VariableForm = () => {
     navigate('/preview');
   }
   
-  console.log("VARIABLES", variables);
   //new variable
   return(
     <Stack tokens={{childrenGap: 16, padding: 12}}>

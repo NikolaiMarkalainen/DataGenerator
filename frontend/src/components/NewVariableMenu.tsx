@@ -54,6 +54,7 @@ export const NewVariableMenu = (props: Props) => {
     };
 
     const handleVariableChange = (content: VariableOptions) => {
+        console.log("Content sent", content);
         setVariableContent(content);
     };
 
@@ -70,7 +71,7 @@ export const NewVariableMenu = (props: Props) => {
             case variableMenuItems.RANDOM_CUSTOM_OBJECT:
                 return <CustomObject onChange={handleVariableChange}/>
             case variableMenuItems.RANDOM_ID:
-                return <RandomId/>
+                return <RandomId onChange={handleVariableChange}/>
             default:
                 return null;
         };
