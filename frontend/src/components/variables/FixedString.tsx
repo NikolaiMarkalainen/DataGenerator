@@ -1,9 +1,12 @@
 import { Stack, TextField } from "@fluentui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IFixedString } from "../../types/IFixedString";
+import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableContents: IFixedString) => void;
+    variableContent: IFixedString;
+    onDelete: () => void;
 }
 
 
@@ -13,6 +16,13 @@ export const FixedString = (props: Props) => {
 
     const [fixedString, setFixedString] = useState<string>('');
 
+    useEffect(() => {
+        if(props.variableContent && props.variableContent.fixedString){
+            setFixedString(props.variableContent.fixedString);
+        }
+    }, [props.variableContent]);
+
+    
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
@@ -21,6 +31,9 @@ export const FixedString = (props: Props) => {
         }
     };
 
+    const handleSubmit = () => {
+        props.onChange({fixedString});
+    };
     return(
         <Stack>
             <TextField
@@ -30,6 +43,7 @@ export const FixedString = (props: Props) => {
                 onChange={(e, value) => setFixedString(value || "")}
                 onKeyDown={handleKeyPress}
             />
+            <AcceptDecline onChange={handleSubmit} onDelete={props.onDelete}/>
         </Stack>
     )
 };

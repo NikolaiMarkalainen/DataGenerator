@@ -2,8 +2,11 @@ import { Stack, IDropdownOption, Dropdown } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { IIDObject, IdTypes } from "../../types/IIDObject";
 
+
 type Props = {
-    onChange: (variable: IIDObject) => void
+    onChange: (variable: IIDObject) => void;
+    variableContent: IIDObject;
+    onDelete: () => void;
 };
 
 export const RandomId = (props: Props) => {
@@ -14,6 +17,17 @@ export const RandomId = (props: Props) => {
         { key: IdTypes.NUMBER, text: "Chronological numbers"},
         { key: IdTypes.UUID, text: "UUID generated id"},
     ]
+
+    useEffect(() => {
+        if(props.variableContent) {
+            if(props.variableContent.idType){
+                const foundItem = idMenuOptios.find(m => m.key === props.variableContent.idType);
+                if(foundItem && foundItem.key !== selectedItem?.key)  {
+                    setSelectedItem(foundItem);
+                };
+            };
+        };
+    },[props.variableContent]);
 
     const handleDropdownChange = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption) => {
         setSelectedItem(item);

@@ -1,8 +1,8 @@
 
 
 export interface ICountryString {
-    key: string;
-    text: string;
+    key: string | undefined;
+    text: string | undefined;
     fixed: boolean;
-    amountFixed: boolean;
+    amountFixed: number;
 };

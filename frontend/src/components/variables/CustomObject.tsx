@@ -1,18 +1,28 @@
-import { Stack, DefaultButton } from "@fluentui/react";
+import { Stack, DefaultButton, PrimaryButton } from "@fluentui/react";
 import { NewVariableMenu } from "../NewVariableMenu";
 import { ICustomObject } from "../../types/ICustomObject";
 import { IVariable } from "../../types/IVariable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableData: ICustomObject) => void;
+    variableContent: ICustomObject;
+    onDelete: () => void;
 };
 
 
 export const CustomObject = (props: Props) => {
     const [fields, setFields] = useState<(IVariable)[]>([]);
     // import custom object or create own custom object
-    // TODO NESTED OBJECTS
+
+    useEffect(() => {
+        if(props.variableContent && props.variableContent.fields){
+            setFields(props.variableContent.fields);
+        }
+    },[props.variableContent]);
+
+    
     const addNewVariable = () => {
         const newVariable: IVariable = {name: "", type: ""};
         const updatedFields = [...fields, newVariable];
@@ -33,6 +43,7 @@ export const CustomObject = (props: Props) => {
         props.onChange({fields: updateFields})
     };
 
+    
     return(
         <Stack tokens={{childrenGap: 16, padding: 12}}>
             {fields.map((variable,index) => (
@@ -45,9 +56,11 @@ export const CustomObject = (props: Props) => {
             />
             ))}
             <DefaultButton
-            text="Add new"
+            style={{backgroundColor:'#FFAE42'}}
+            text="Add Object Child"
             onClick={addNewVariable}
             />
+        <AcceptDecline onDelete={props.onDelete}/>
         </Stack>
     )
 };

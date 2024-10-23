@@ -2,10 +2,12 @@ import { Dropdown, Stack, IDropdownOption, Toggle, TextField, FontIcon } from "@
 import { useEffect, useState } from "react";
 import { ICountryString } from "../../types/ICountryString";
 import { validateInputFormat } from "../helpers/validationHelper";
-
+import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableContents: ICountryString) => void;
+    variableContent: ICountryString;
+    onDelete: () => void;
 }
 
 export const CountrString = (props: Props) => {
@@ -29,11 +31,36 @@ export const CountrString = (props: Props) => {
         fetchCountries();
     }, []);
 
+
+
     useEffect(() => {
         if(randomCountry){
             setSelelectedCountry({key: "", text: ""});
         }
     }, [randomCountry])
+
+    useEffect(() => {
+        if(props.variableContent){
+            if(props.variableContent.fixed && props.variableContent.amountFixed){
+                setAmountFixed(props.variableContent.amountFixed);
+            }
+            if(props.variableContent.key && props.variableContent.text){
+                setSelelectedCountry({key: props.variableContent.key, text: props.variableContent.text})
+            }
+            if(props.variableContent.fixed){
+                setRandomCountry(props.variableContent.fixed);
+            }
+        }
+    }, [props.variableContent])
+
+    const submitData = () => {
+        props.onChange({
+            text: selectedCountry?.text,
+            key: selectedCountry?.key.toString(),
+            fixed: randomCountry,
+            amountFixed: amountFixed,
+        });
+    }
 
     const handleDropdownChange= (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption)=> {
         setSelelectedCountry(item);
@@ -54,18 +81,20 @@ export const CountrString = (props: Props) => {
             /> 
                 <Stack tokens={{padding: 12}}>
                     <Toggle
-                        onText="Fixed Country"
-                        offText="Random Country"
+                        onText="Random Countries"
+                        offText="Singular Country"
                         checked={randomCountry}
                         onChange={handleToggleChange}
                     />
                     <TextField
                         disabled={!randomCountry}
-                        label="Set amount of countries fixed"
+                        label="Set amount of countries"
+                        value={amountFixed.toString()}
                         description="Adjust the amount of random countries, Default will generate a random country for each entry"
                         onChange={(input, text) => validateInputFormat(text || '', setAmountFixed)}
                     />
                 </Stack>
+            <AcceptDecline onChange={submitData} onDelete={props.onDelete}/>
         </Stack>
     )
 };

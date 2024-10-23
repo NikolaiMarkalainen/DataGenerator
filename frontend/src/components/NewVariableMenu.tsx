@@ -8,6 +8,13 @@ import { FixedString } from "./variables/FixedString";
 import { CustomObject } from "./variables/CustomObject";
 import { RandomId } from "./variables/RandomId";
 import { CountrString } from "./variables/CountryString";
+import { IFixedString } from "../types/IFixedString";
+import { IOpenString } from "../types/IOpenString";
+import { INumberVariable } from "../types/INumberVariable";
+import { ICountryString } from "../types/ICountryString";
+import { ICustomObject } from "../types/ICustomObject";
+import { IIDObject } from "../types/IIDObject";
+import { AcceptDecline } from "./AcceptDecline";
 
 
 type Props = {
@@ -58,22 +65,60 @@ export const NewVariableMenu = (props: Props) => {
         setVariableContent(content);
     };
 
+
+
     const renderVariableComponent = () => {
         switch(selectedItem?.key) {
             case variableMenuItems.NUMBER:
-                return <NumberVariables onChange={handleVariableChange}/>
+                return <NumberVariables 
+                            variableContent={props.variable.variableData as INumberVariable} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             case variableMenuItems.OPEN_STRING:
-                return <OpenString onChange={handleVariableChange}/>
+                return <OpenString 
+                            variableContent={props.variable.variableData as IOpenString} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             case variableMenuItems.FIXED_STRING:
-                return <FixedString onChange={handleVariableChange}/>
+                return <FixedString 
+                            variableContent={props.variable.variableData as IFixedString} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
+            case variableMenuItems.RANDOM_FIRST_NAME:
+                return <AcceptDecline
+                            onVariableAccept={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
+            case variableMenuItems.RANDOM_LAST_NAME:
+                return <AcceptDecline
+                            onVariableAccept={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             case variableMenuItems.RANDOM_COUNTRY:
-                return <CountrString onChange={handleVariableChange}/>
+                return <CountrString 
+                            variableContent={props.variable.variableData as ICountryString} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             case variableMenuItems.RANDOM_CUSTOM_OBJECT:
-                return <CustomObject onChange={handleVariableChange}/>
+                return <CustomObject 
+                            variableContent={props.variable.variableData as ICustomObject} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             case variableMenuItems.RANDOM_ID:
-                return <RandomId onChange={handleVariableChange}/>
+                return <RandomId 
+                            variableContent={props.variable.variableData as IIDObject} 
+                            onChange={handleVariableChange}
+                            onDelete={props.onDelete}
+                            />
             default:
-                return null;
+                return <AcceptDecline
+                            onDelete={props.onDelete}
+                            />
         };
     };
 
@@ -81,11 +126,15 @@ export const NewVariableMenu = (props: Props) => {
         handleSubmit();
     }, [variableContent])
 
+
     useEffect(() => {
-        if(selectedItem?.key === variableMenuItems.RANDOM_FIRST_NAME || selectedItem?.key === variableMenuItems.RANDOM_LAST_NAME){
-            handleVariableChange({useProperty: true});
-        }
-    }, [selectedItem])
+        setSelectedItem(variablesMenuOptions.find(option => option.key === props.variable.type));
+        setVariableName(props.variable.name);
+        setVariableContent(props.variable.variableData);
+    }, [props.variable]);
+
+
+
     return(
         <Stack tokens={{childrenGap: 16}}>
                 <TextField
@@ -101,9 +150,6 @@ export const NewVariableMenu = (props: Props) => {
                     options={variablesMenuOptions}
                 />
             {renderVariableComponent()}
-            <Stack.Item align="end">
-                <FontIcon iconName="Delete" className={iconClass} onClick={props.onDelete}/>
-            </Stack.Item>
         </Stack>
     )
 };
