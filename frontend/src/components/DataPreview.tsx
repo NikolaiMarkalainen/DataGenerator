@@ -18,7 +18,7 @@ export const DataPreview = () => {
         console.log("generate data")
     }
     return (
-        <Stack horizontal horizontalAlign="center" style={{minHeight: "50%"}}>
+        <Stack horizontal horizontalAlign="center" styles={{root: {minHeight: "90vh",}}}>
             <Stack tokens={{childrenGap: 16}} style={{width: "50%"}}>
                 {variables && variables.length > 0 ? (
                     variables.map((m, index) => {
@@ -29,13 +29,12 @@ export const DataPreview = () => {
                                 enableScopedSelectors
                                 horizontal
                                 tokens={{ childrenGap: 16, padding: 22 }}
-                                styles={{root: {justifyContent: "space-around", backgroundColor:'#FFAE42'}}}
+                                styles={{root: {justifyContent: "space-around", backgroundColor:'#FFAE42', borderBottom: "1px solid black"}}}
                             >
-                                <Stack.Item>
+                                <Stack.Item styles={{root: {flexBasis: "40%", textAlign: 'center', backgroundColor:'#FFAE42'}}}>
                                     <Text style={{color: "grey"}}>"{m.name}"</Text>
                                 </Stack.Item>
-                                    -
-                                <Stack.Item>
+                                <Stack.Item styles={{root: {flexBasis: "40%", textAlign: 'center', backgroundColor:'#FFAE42'}}}>
                                     <Text>{typeToName}</Text>
                                 </Stack.Item>
                             </Stack>
@@ -44,8 +43,10 @@ export const DataPreview = () => {
                 ) : (
                     <Text>No variables available</Text>
                 )}
-                <PrimaryButton onClick={generateData}>Genereate Data</PrimaryButton>
-                <DefaultButton onClick={navigateBack}>Go Back</DefaultButton>
+                <Stack>
+                    <PrimaryButton onClick={generateData}>Genereate Data</PrimaryButton>
+                    <DefaultButton onClick={navigateBack}>Go Back</DefaultButton>
+                </Stack>
             </Stack>
         </Stack>
     );

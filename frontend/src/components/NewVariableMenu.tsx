@@ -121,6 +121,9 @@ export const NewVariableMenu = (props: Props) => {
 
 
     useEffect(() => {
+        if(props.variable.name !== "" && props.variable.type !== ""){
+            return
+        }
         props.onChange(props.index, {name: variableName ?? "", type: selectedItem ? selectedItem.key : "", variableData: variableContent}, );
 
     },[variableName])

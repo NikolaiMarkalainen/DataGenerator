@@ -21,11 +21,14 @@ export const VariableForm = () => {
 
   useEffect(() => {
     // the data stays pure and we can submit to back end
-    setVariableSubmitBlock(variables.every(variable => variable.variableData === undefined));
-
+    setVariableSubmitBlock(variables.some(m => {
+      return m.name === "" || m.type === "" || m.variableData === undefined
+    }));
   }, [variables]);
 
   
+
+
   const addNewVariable = () => {
     const newVariable = { name: "", type: ""};
     // new redux variable
@@ -34,6 +37,7 @@ export const VariableForm = () => {
 
   const handleVariableChange = (index: number, variableData: IVariable) => {
     // updating to redux store
+    console.log("VARIABLE CHANGED", variableData);
     dispatch(updateVariable({index, variable: variableData}));
   };
 
