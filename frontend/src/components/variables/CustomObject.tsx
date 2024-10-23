@@ -3,7 +3,6 @@ import { NewVariableMenu } from "../NewVariableMenu";
 import { ICustomObject } from "../../types/ICustomObject";
 import { IVariable } from "../../types/IVariable";
 import { useEffect, useState } from "react";
-import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableData: ICustomObject) => void;
@@ -23,6 +22,11 @@ export const CustomObject = (props: Props) => {
     },[props.variableContent]);
 
     
+    useEffect(() =>  {
+        props.onChange({fields: fields});
+    }, [fields]);
+
+
     const addNewVariable = () => {
         const newVariable: IVariable = {name: "", type: ""};
         const updatedFields = [...fields, newVariable];
@@ -60,7 +64,6 @@ export const CustomObject = (props: Props) => {
             text="Add Object Child"
             onClick={addNewVariable}
             />
-        <AcceptDecline onDelete={props.onDelete}/>
         </Stack>
     )
 };

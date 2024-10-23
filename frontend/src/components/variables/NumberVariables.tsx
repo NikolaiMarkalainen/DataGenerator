@@ -3,7 +3,6 @@ import { Slider, Stack, TextField, Toggle, Dropdown , IDropdownOption, DropdownM
 import { useState } from 'react';
 import { INumberVariable } from '../../types/INumberVariable';
 import { validateInputFormat } from '../helpers/validationHelper';
-import { AcceptDecline } from '../AcceptDecline';
 
 type Props = {
   onChange: (variableContents: INumberVariable) => void;
@@ -50,6 +49,14 @@ export const NumberVariables = (props: Props) => {
       return value.toString();
     }
   };
+
+  useEffect(() => {
+    props.onChange({ 
+      min: sliderMin, 
+      max: sliderMax, 
+      decimalPrecision: decimalPrecision, 
+      decimal: isDecimal})
+  }, [isDecimal, decimalPrecision, sliderMax, sliderMin])
 
 
   const onSliderChange = (value: number, range?: [number, number]) => {
@@ -114,7 +121,6 @@ export const NumberVariables = (props: Props) => {
             />
         </Stack>
       </Stack>
-      <AcceptDecline onChange={handlePropertySubmit} onDelete={props.onDelete}/>
     </Stack>
   );
 };

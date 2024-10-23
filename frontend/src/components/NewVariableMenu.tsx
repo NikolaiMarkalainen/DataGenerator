@@ -14,7 +14,6 @@ import { INumberVariable } from "../types/INumberVariable";
 import { ICountryString } from "../types/ICountryString";
 import { ICustomObject } from "../types/ICustomObject";
 import { IIDObject } from "../types/IIDObject";
-import { AcceptDecline } from "./AcceptDecline";
 
 
 type Props = {
@@ -87,16 +86,6 @@ export const NewVariableMenu = (props: Props) => {
                             onChange={handleVariableChange}
                             onDelete={props.onDelete}
                             />
-            case variableMenuItems.RANDOM_FIRST_NAME:
-                return <AcceptDecline
-                            onVariableAccept={handleVariableChange}
-                            onDelete={props.onDelete}
-                            />
-            case variableMenuItems.RANDOM_LAST_NAME:
-                return <AcceptDecline
-                            onVariableAccept={handleVariableChange}
-                            onDelete={props.onDelete}
-                            />
             case variableMenuItems.RANDOM_COUNTRY:
                 return <CountrString 
                             variableContent={props.variable.variableData as ICountryString} 
@@ -115,10 +104,7 @@ export const NewVariableMenu = (props: Props) => {
                             onChange={handleVariableChange}
                             onDelete={props.onDelete}
                             />
-            default:
-                return <AcceptDecline
-                            onDelete={props.onDelete}
-                            />
+            default: return null
         };
     };
 
@@ -134,6 +120,18 @@ export const NewVariableMenu = (props: Props) => {
     }, [props.variable]);
 
 
+    useEffect(() => {
+        props.onChange(props.index, {name: variableName ?? "", type: selectedItem ? selectedItem.key : "", variableData: variableContent}, );
+
+    },[variableName])
+
+    useEffect(() => {
+        if(selectedItem && selectedItem.key === variableMenuItems.RANDOM_FIRST_NAME || selectedItem && selectedItem.key === variableMenuItems.RANDOM_LAST_NAME ) {
+            handleVariableChange({useProperty: true});
+        }
+    }, [selectedItem]);
+
+    
 
     return(
         <Stack tokens={{childrenGap: 16}}>
@@ -148,6 +146,9 @@ export const NewVariableMenu = (props: Props) => {
                     selectedKey={selectedItem  ? selectedItem.key : props.variable.type}
                     onChange={handleDropdownChange}
                     options={variablesMenuOptions}
+                />
+                <FontIcon iconName="Delete" className={iconClass} onClick={props.onDelete} 
+                    style={{ alignSelf: 'end'}}
                 />
             {renderVariableComponent()}
         </Stack>

@@ -2,7 +2,6 @@ import { Stack, TextField, Toggle } from "@fluentui/react";
 import { IOpenString } from "../../types/IOpenString";
 import { useEffect, useState } from "react";
 import { validateInputFormat } from "../helpers/validationHelper";
-import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableContents: IOpenString) => void;
@@ -26,19 +25,22 @@ export const OpenString  = (props: Props) => {
         }
     }, [props.variableContent])
 
+
     const handleToggleChange = (e:React.MouseEvent<HTMLElement>, checked?: boolean) => {
         setUseWords(checked || false);
-        if(useWords) {
+        if(!useWords) {
             setCharacterLength(0);
         };
-    }
+    };
 
-    const handleSubmit = () => {
+    useEffect(() => {
         props.onChange({
             characterLength: characterLength,
             words: useWords
         });
-    }
+    }, [useWords, characterLength]);
+
+
     return(
         <Stack>
             <Stack tokens={{padding: 12, childrenGap: 8}} horizontalAlign="start">
@@ -57,7 +59,6 @@ export const OpenString  = (props: Props) => {
                 onChange={handleToggleChange}
                 />
             </Stack>
-            <AcceptDecline onChange={handleSubmit} onDelete={props.onDelete}/>
         </Stack>
     )
 };

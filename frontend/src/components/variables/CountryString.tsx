@@ -2,7 +2,6 @@ import { Dropdown, Stack, IDropdownOption, Toggle, TextField, FontIcon } from "@
 import { useEffect, useState } from "react";
 import { ICountryString } from "../../types/ICountryString";
 import { validateInputFormat } from "../helpers/validationHelper";
-import { AcceptDecline } from "../AcceptDecline";
 
 type Props = {
     onChange: (variableContents: ICountryString) => void;
@@ -53,14 +52,15 @@ export const CountrString = (props: Props) => {
         }
     }, [props.variableContent])
 
-    const submitData = () => {
+    useEffect(() => {
         props.onChange({
             text: selectedCountry?.text,
             key: selectedCountry?.key.toString(),
             fixed: randomCountry,
             amountFixed: amountFixed,
         });
-    }
+    }, [selectedCountry, randomCountry, amountFixed])
+
 
     const handleDropdownChange= (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption)=> {
         setSelelectedCountry(item);
@@ -68,6 +68,9 @@ export const CountrString = (props: Props) => {
 
     const handleToggleChange = (e: React.MouseEvent<HTMLElement>, checked?: boolean) => {
         setRandomCountry(checked || false);
+        if(randomCountry) {
+            setAmountFixed(0);
+        }
     }
 
     return(
@@ -94,7 +97,6 @@ export const CountrString = (props: Props) => {
                         onChange={(input, text) => validateInputFormat(text || '', setAmountFixed)}
                     />
                 </Stack>
-            <AcceptDecline onChange={submitData} onDelete={props.onDelete}/>
         </Stack>
     )
 };

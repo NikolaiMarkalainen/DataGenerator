@@ -31,7 +31,7 @@ export const RandomId = (props: Props) => {
 
     const handleDropdownChange = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption) => {
         setSelectedItem(item);
-    }
+    };
 
     useEffect(() => {
         if(selectedItem) {
