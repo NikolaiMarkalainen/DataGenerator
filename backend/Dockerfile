@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
-WORKDIR /app
+WORKDIR /backend
 
 #NEEDED FOR SWAGGER TO WORK
 ENV ASPNETCORE_ENVIRONMENT=Development
@@ -18,15 +18,15 @@ COPY ["backend.csproj", "./"]
 RUN dotnet restore
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "backend.csproj" -c Release -o /app/build
+RUN dotnet build "backend.csproj" -c Release -o /backend/build
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c Release -o /backend/publish /p:UseAppHost=false
 
 
 FROM base AS final
 ENV ASPNETCORE_URLS=http://+:5252
-WORKDIR /app
-COPY --from=publish /app/publish .
+WORKDIR /backend
+COPY --from=publish /backend/publish .
 ENTRYPOINT dotnet watch run
 

@@ -67,14 +67,6 @@ export const NumberVariables = (props: Props) => {
     setIsDecimal(checked || false);
   }
 
-  const handlePropertySubmit = () => {
-    props.onChange({ 
-      min: sliderMin, 
-      max: sliderMax, 
-      decimalPrecision: decimalPrecision, 
-      decimal: isDecimal})
-  }
-
   return (
     <Stack>
       <Stack horizontal>

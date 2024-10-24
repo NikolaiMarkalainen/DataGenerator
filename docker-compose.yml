@@ -1,8 +1,17 @@
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./frontend/:/frontend
   api:
     container_name: Api
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -14,7 +23,7 @@ services:
     ports:
       - ${PORT}:${PORT}
     volumes:
-      - ./:/app
+      - ./backend/:/backend
     depends_on:
       database:
         condition: service_healthy
@@ -37,5 +46,15 @@ services:
     ports:
     - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
-    - ./app/data:/data/database
+    - .backend/app/data:/data/database
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - frontend
+      - api
 volumes: {}
