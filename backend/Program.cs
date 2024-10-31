@@ -19,6 +19,7 @@ builder.Services.AddScoped<CountriesService>();
 builder.Services.AddScoped<FirstnamesService>();
 builder.Services.AddScoped<SurnamesService>();
 builder.Services.AddScoped<WordsService>();
+builder.Services.AddScoped<GenerateRandomService>();
 
 builder.Services.AddDbContext<DataDbContext>(options =>
     options.UseNpgsql(databaseUrl));
