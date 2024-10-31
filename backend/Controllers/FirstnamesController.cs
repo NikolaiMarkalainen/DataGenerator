@@ -17,10 +17,23 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<IActionResult> GetAllFirstnames()
         {
             var countries = await _firstnamesSerivce.GetAllFirstnamesAsync();
             return Ok(countries);
+        }
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomFirstname()
+        {
+            try
+            {
+                var GetRandomFirstname = await _firstnamesSerivce.GetRandomFirstnameAsync();
+                return Ok(GetRandomFirstname);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }        
         }
     }
 }

@@ -17,7 +17,7 @@ namespace backend.Services
             return await _context.Surnames.ToListAsync();
         }
 
-        public async Task<Surname> GetRandomSingleSurname()
+        public async Task<Surname> GetRandomSurnameAsync()
         {
             var totalCountOfSurnames = await _context.Surnames.CountAsync();
             if (totalCountOfSurnames == 0)

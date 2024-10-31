@@ -26,7 +26,7 @@ namespace backend.Controllers
         {
             try
             {
-                var randomSurname = await _surnamesService.GetRandomSingleSurname();
+                var randomSurname = await _surnamesService.GetRandomSurnameAsync();
                 return Ok(randomSurname);
             }
             catch(InvalidOperationException ex)
