@@ -1,5 +1,7 @@
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
+using backend.Controllers;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +13,12 @@ string databaseUrl = envVars["DATABASE_URL"];
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//api and service loading
+builder.Services.AddControllers();
+builder.Services.AddScoped<CountriesService>();
+
 builder.Services.AddDbContext<DataDbContext>(options =>
     options.UseNpgsql(databaseUrl));
-
-builder.Services.AddControllers();
 
 IConfiguration configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())

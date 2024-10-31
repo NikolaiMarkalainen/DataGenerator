@@ -5,7 +5,7 @@ public class DataDbContext: DbContext
 {
     public DataDbContext(DbContextOptions<DataDbContext> options): base(options) {}
 
-    public DbSet<Country> Country { get; set; }
+    public DbSet<Country> Countries { get; set; }
     public DbSet<Firstname> Firstnames{ get; set; }
     public DbSet<Surname> Surnames { get; set; }
     public DbSet<Word> Words { get; set; }
@@ -37,11 +37,11 @@ public class DataDbContext: DbContext
             await Words.AddRangeAsync(words);
         }
 
-        if (!await Country.AnyAsync())
+        if (!await Countries.AnyAsync())
         {
             var countriesData = File.ReadAllText("./data/json_data/countries_keys.json");
             var countries = JsonConvert.DeserializeObject<List<Country>>(countriesData);
-            await Country.AddRangeAsync(countries);
+            await Countries.AddRangeAsync(countries);
         }
 
         await SaveChangesAsync();
