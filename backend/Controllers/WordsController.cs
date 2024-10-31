@@ -1,3 +1,4 @@
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,17 +9,17 @@ namespace backend.Controllers
     [Route("/words")]
     public class WordsController : ControllerBase
     {
-        private readonly DataDbContext _context;
+        private readonly WordsService _wordsService;
         // constructor to add DB context to controller
-        public WordsController(DataDbContext context)
+        public WordsController(WordsService wordsService)
         {
-            _context = context;
+            _wordsService = wordsService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCountries()
         {
-            var countries = await _context.Words.ToListAsync();
+            var countries = await _wordsService.GetAllWordsAsync();
             return Ok(countries);
         }
     }

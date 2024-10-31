@@ -1,3 +1,4 @@
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,17 +9,17 @@ namespace backend.Controllers
     [Route("/firstnames")]
     public class FirstnamesController : ControllerBase
     {
-        private readonly DataDbContext _context;
+        private readonly FirstnamesService _firstnamesSerivce;
         // constructor to add DB context to controller
-        public FirstnamesController(DataDbContext context)
+        public FirstnamesController(FirstnamesService firstnamesService)
         {
-            _context = context;
+            _firstnamesSerivce = firstnamesService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCountries()
         {
-            var countries = await _context.Firstnames.ToListAsync();
+            var countries = await _firstnamesSerivce.GetAllFirstnamesAsync();
             return Ok(countries);
         }
     }

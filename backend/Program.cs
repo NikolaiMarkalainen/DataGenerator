@@ -16,13 +16,16 @@ builder.Services.AddSwaggerGen();
 //api and service loading
 builder.Services.AddControllers();
 builder.Services.AddScoped<CountriesService>();
+builder.Services.AddScoped<FirstnamesService>();
+builder.Services.AddScoped<SurnamesService>();
+builder.Services.AddScoped<WordsService>();
 
 builder.Services.AddDbContext<DataDbContext>(options =>
     options.UseNpgsql(databaseUrl));
 
 IConfiguration configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.json" , optional: true, reloadOnChange: false)
     .AddEnvironmentVariables()
     .Build();
 

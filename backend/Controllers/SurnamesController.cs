@@ -1,3 +1,4 @@
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,18 +9,30 @@ namespace backend.Controllers
     [Route("/surnames")]
     public class SurnamesController : ControllerBase
     {
-        private readonly DataDbContext _context;
-        // constructor to add DB context to controller
-        public SurnamesController(DataDbContext context)
+        private readonly SurnamesService _surnamesService;
+        public SurnamesController(SurnamesService surnamesService)
         {
-            _context = context;
+            _surnamesService = surnamesService;      
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<IActionResult> GetAllSurnames()
         {
-            var countries = await _context.Surnames.ToListAsync();
+            var countries = await _surnamesService.GetAllSurnamesAsync();
             return Ok(countries);
+        }
+        [HttpGet("random")]
+        public async Task <IActionResult> GetRandomSurname()
+        {
+            try
+            {
+                var randomSurname = await _surnamesService.GetRandomSingleSurname();
+                return Ok(randomSurname);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
