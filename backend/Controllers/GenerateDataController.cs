@@ -36,6 +36,7 @@ namespace backend.Controllers
         {
             if(charactersLength == null)
             {
+                Console.WriteLine("HERE");
                 return BadRequest("charactersLength variable must be provided.");
             }
             try

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { variableNameForNumber } from "../types/variableEnum";
-
+import axios from "axios";
 
 export const DataPreview = () => {
     const variables = useSelector((state: RootState) => state.variables.variables);
@@ -14,8 +14,14 @@ export const DataPreview = () => {
         navigate('/');
     };
 
-    const generateData = () => {
-        console.log("generate data")
+    const generateData = async () => {
+        console.log("generate data");
+        try{
+            const response = await axios.get("http://localhost:5300/words/random");
+            console.log(response.data);
+        } catch(error){
+            console.log(error);
+        }
     }
     return (
         <Stack horizontal horizontalAlign="center" styles={{root: {minHeight: "90vh",}}}>

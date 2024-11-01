@@ -10,6 +10,15 @@ DotEnv.Load();
 var envVars = DotEnv.Read();
 string databaseUrl = envVars["DATABASE_URL"];
 
+builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policyBuilder => {
+                policyBuilder.WithOrigins("http://localhost:3000");
+                policyBuilder.AllowAnyHeader();
+                policyBuilder.AllowAnyMethod();
+            });
+        });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -31,6 +40,9 @@ IConfiguration configuration = new ConfigurationBuilder()
     .Build();
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
+
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 builder.Logging.AddConsole();
 
@@ -39,7 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
+
 app.MapControllers();
 // Apply migrations and seed data
 using (var scope = app.Services.CreateScope())
@@ -58,6 +70,16 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+        return;
+    }
+    await next();
+});
 
 app.MapGet("/", () => "main");
 
