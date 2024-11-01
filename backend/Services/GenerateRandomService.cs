@@ -1,5 +1,6 @@
 
 using System.Text;
+using backend.Models;
 
 namespace backend.Services
 {
@@ -59,6 +60,10 @@ namespace backend.Services
                 return Task.FromResult(Guid.NewGuid().ToString());
             }
             throw new ArgumentException("Wrong value for idType");
+        }
+        public Task<string> GenerateObjectToData(Variable variable)
+        {
+            return Task.FromResult("okasdasda");
         }
     }
 }

@@ -1,8 +1,8 @@
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
-using backend.Controllers;
 using backend.Services;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load environment variables and request a connection to PSQL DB
@@ -23,7 +23,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //api and service loading
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    });
+
 builder.Services.AddScoped<CountriesService>();
 builder.Services.AddScoped<FirstnamesService>();
 builder.Services.AddScoped<SurnamesService>();
@@ -69,17 +74,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError($"An error occurred during migration or seeding: {ex.Message}");
     }
 }
-
-app.Use(async (context, next) =>
-{
-    if (context.Request.Method == "OPTIONS")
-    {
-        context.Response.StatusCode = 200;
-        await context.Response.CompleteAsync();
-        return;
-    }
-    await next();
-});
 
 app.MapGet("/", () => "main");
 

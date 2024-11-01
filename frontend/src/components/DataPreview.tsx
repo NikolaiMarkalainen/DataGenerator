@@ -17,7 +17,7 @@ export const DataPreview = () => {
     const generateData = async () => {
         console.log("generate data");
         try{
-            const response = await axios.get("http://localhost:5300/words/random");
+            const response = await axios.post("http://localhost:5300/generate/file", {...variables[0]});
             console.log(response.data);
         } catch(error){
             console.log(error);

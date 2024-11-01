@@ -1,3 +1,4 @@
+using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,6 +62,24 @@ namespace backend.Controllers
             {
                 var id = await _generateRandomService.GenerateRandomId(idObject.IdType);
                 return Ok(new {id});
+            }
+            catch(InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+        [Route("file")]
+        [HttpPost]
+        public async Task<IActionResult> ProcessDataToFile([FromBody] Variable variable)
+        {
+            if(variable == null)
+            {
+                return BadRequest("Cant generate file without data.");
+            }
+            try
+            {
+                var result = await _generateRandomService.GenerateObjectToData(variable);
+                return Ok(new {result});
             }
             catch(InvalidOperationException ex)
             {
