@@ -50,6 +50,9 @@ export const NewVariableMenu = (props: Props) => {
 
     const handleDropdownChange = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption) => {
         setSelectedItem(item);
+        if(selectedItem && selectedItem.key === variableMenuItems.RANDOM_FIRST_NAME || selectedItem && selectedItem.key === variableMenuItems.RANDOM_LAST_NAME ) {
+            handleVariableChange({useProperty: true});
+        }
     };
 
     const handleSubmit = () => {
@@ -127,14 +130,6 @@ export const NewVariableMenu = (props: Props) => {
         props.onChange(props.index, {name: variableName ?? "", type: selectedItem ? selectedItem.key : "", variableData: variableContent}, );
 
     },[variableName])
-
-    useEffect(() => {
-        if(selectedItem && selectedItem.key === variableMenuItems.RANDOM_FIRST_NAME || selectedItem && selectedItem.key === variableMenuItems.RANDOM_LAST_NAME ) {
-            handleVariableChange({useProperty: true});
-        }
-    }, [selectedItem]);
-
-    
 
     return(
         <Stack tokens={{childrenGap: 16}}>

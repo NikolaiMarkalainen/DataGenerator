@@ -80,5 +80,15 @@ namespace backend.Models
 
         [JsonProperty("variableData")]
         public VariableData? VariableData { get; set; }
+        [JsonProperty("amount")]
+        public int Amount { get; set; }
+    }
+
+    public class FileRequest
+    {
+        [JsonProperty("variables")]
+        public List<Variable> Variables {get; set;}
+        [JsonProperty("amount")]
+        public int Amount { get; set; }
     }
 }

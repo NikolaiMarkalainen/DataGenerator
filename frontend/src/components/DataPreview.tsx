@@ -1,26 +1,39 @@
-import { PrimaryButton, DefaultButton, Stack, Text } from "@fluentui/react";
+import { PrimaryButton, DefaultButton, Stack, Text, TextField } from "@fluentui/react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { variableNameForNumber } from "../types/variableEnum";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { IGenerateRequest } from "../types/IGenereateRequest";
 
 export const DataPreview = () => {
     const variables = useSelector((state: RootState) => state.variables.variables);
+    const [amount, setAmount] = useState<number>(0);
+    const [requestBody, setRequestBody] = useState<IGenerateRequest>();
     console.log(variables);
     const navigate = useNavigate();
-
+    
     const navigateBack = () => {
         navigate('/');
     };
 
+    useEffect(() => {
+        if(Number(amount)){
+            setRequestBody({"variables": variables, "amount" : amount });
+        }
+    },[amount])
+    
     const generateData = async () => {
         console.log("generate data");
-        try{
-            const response = await axios.post("http://localhost:5300/generate/file", {...variables[0]});
-            console.log(response.data);
-        } catch(error){
-            console.log(error);
+        if(amount !== 0)
+        {
+            try{
+                const response = await axios.post("http://localhost:5300/generate/file", requestBody);
+                console.log(response.data);
+            } catch(error){
+                console.log(error);
+            }
         }
     }
     return (
@@ -50,7 +63,13 @@ export const DataPreview = () => {
                     <Text>No variables available</Text>
                 )}
                 <Stack>
-                    <PrimaryButton onClick={generateData}>Genereate Data</PrimaryButton>
+                    <TextField 
+                        label="Amount to generate" 
+                        value={amount?.toString()}
+                        onChange={(input, text) => setAmount(Number(text))}
+                        errorMessage={"Only numerical values"}
+                    />
+                    <PrimaryButton style={{marginBottom: 16}} onClick={generateData}>Genereate Data</PrimaryButton>
                     <DefaultButton onClick={navigateBack}>Go Back</DefaultButton>
                 </Stack>
             </Stack>

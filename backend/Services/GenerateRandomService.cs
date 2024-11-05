@@ -61,9 +61,50 @@ namespace backend.Services
             }
             throw new ArgumentException("Wrong value for idType");
         }
-        public Task<string> GenerateObjectToData(Variable variable)
+        public Task<string> GenerateObjectToData(FileRequest fileRequest)
         {
-            return Task.FromResult("okasdasda");
+            var result = new StringBuilder();
+            foreach (var variable in fileRequest.Variables)
+                {
+                    result.AppendLine($"Processing Variable: {variable.Name}");
+                    switch (variable.Type)
+                    {
+                        case DataEnum.NUMBER:
+                            result.AppendLine($"Number Value: "); 
+                            break;
+
+                        case DataEnum.OPEN_STRING:
+                            result.AppendLine($"Open String: "); 
+                            break;
+
+                        case DataEnum.FIXED_STRING:
+                            result.AppendLine($"Fixed String: "); 
+                            break;
+
+                        case DataEnum.RANDOM_FIRST_NAME:
+                            result.AppendLine($"Random First Name: "); 
+                            break;
+
+                        case DataEnum.RANDOM_LAST_NAME:
+                            result.AppendLine($"Random Last Name:"); 
+                            break;
+
+                        case DataEnum.RANDOM_COUNTRY:
+                            result.AppendLine($"Random Country: ");
+                            break;
+
+                        case DataEnum.RANDOM_CUSTOM_OBJECT:
+                            result.AppendLine($"Random Custom Object: ");
+                            break;
+
+                        case DataEnum.RANDOM_ID:
+                            result.AppendLine($"Random ID: ");
+                            break;
+                    }
+                };
+                result.AppendLine($"Amount to generate: {fileRequest.Amount}");
+
+            return Task.FromResult(result.ToString());
         }
     }
 }

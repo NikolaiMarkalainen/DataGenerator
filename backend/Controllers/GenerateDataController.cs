@@ -70,15 +70,15 @@ namespace backend.Controllers
         }
         [Route("file")]
         [HttpPost]
-        public async Task<IActionResult> ProcessDataToFile([FromBody] Variable variable)
+        public async Task<IActionResult> ProcessDataToFile([FromBody] FileRequest request)
         {
-            if(variable == null)
+            if(request == null)
             {
                 return BadRequest("Cant generate file without data.");
             }
             try
             {
-                var result = await _generateRandomService.GenerateObjectToData(variable);
+                var result = await _generateRandomService.GenerateObjectToData(request);
                 return Ok(new {result});
             }
             catch(InvalidOperationException ex)
@@ -88,3 +88,21 @@ namespace backend.Controllers
         }
     }
 }
+/*
+
+{
+    amount: 1000,
+    variables:
+    [
+        {"name":"asdas","type":0,"variableData":{"min":0,"max":10,"decimalPrecision":0,"decimal":false}},
+        {"name":"asdasd","type":2,"variableData":{"fixedString":"dsdsds"}},
+        {"name":"O","type":1,"variableData":{"characterLength":0,"words":false}},
+        {"name":"Random First Name","type":3,"variableData":{"useProperty":true}},
+        {"name":"Random Last name","type":4,"variableData":{"useProperty":true}},
+        {"name":"Random Country","type":5,"variableData":{"text":"Bulgaria","key":"BG","fixed":false,"amountFixed":1}},
+        {"name":"CUstom Object","type":6,"variableData":{"fields":[{"name":"asdasd","type":5,"variableData":{"fixed":false,"amountFixed":1}}]}},
+        {"name":"Random Id","type":7,"variableData":{"idType":2}}
+    ]
+}
+
+*/

@@ -59,11 +59,20 @@ export const CountrString = (props: Props) => {
             fixed: randomCountry,
             amountFixed: amountFixed,
         });
-    }, [selectedCountry, randomCountry, amountFixed])
+    }, [randomCountry, amountFixed])
 
 
     const handleDropdownChange= (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption)=> {
         setSelelectedCountry(item);
+        if(selectedCountry)
+        {
+            props.onChange({
+                text: selectedCountry?.text,
+                key: selectedCountry?.key.toString(),
+                fixed: randomCountry,
+                amountFixed: amountFixed,
+            }); 
+        }
     }
 
     const handleToggleChange = (e: React.MouseEvent<HTMLElement>, checked?: boolean) => {
@@ -71,6 +80,7 @@ export const CountrString = (props: Props) => {
         if(randomCountry) {
             setAmountFixed(0);
         }
+            
     }
 
     return(
