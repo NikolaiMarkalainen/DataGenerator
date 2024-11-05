@@ -15,7 +15,7 @@ namespace backend.Services
         {
             return await _context.Words.ToListAsync();
         }
-        public async Task<Word> GetRandomWordAsync()
+        public async Task<string> GetRandomWordAsync()
         {
             var totalCountOfWords = await _context.Words.CountAsync();
             if (totalCountOfWords == 0)
@@ -30,7 +30,7 @@ namespace backend.Services
             {
                 throw new InvalidOperationException($"Surname with ID {randomId} not found.");
             }
-            return word;
+            return word.text;
         }
     }
 

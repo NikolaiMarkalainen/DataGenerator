@@ -35,6 +35,11 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> ProcessRandomString([FromBody] string charactersLength)
         {
+            var OpenString = new OpenString();
+            // model sending
+            OpenString.Words = false;
+            OpenString.CharacterLength = charactersLength;
+            
             if(charactersLength == null)
             {
                 Console.WriteLine("HERE");
@@ -42,7 +47,7 @@ namespace backend.Controllers
             }
             try
             {
-                var word = await _generateRandomService.GenerateRandomString(charactersLength);
+                var word = await _generateRandomService.GenerateRandomString(OpenString);
                 return Ok(new {word});
             }
             catch(InvalidOperationException ex)

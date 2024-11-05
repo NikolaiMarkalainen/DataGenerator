@@ -17,7 +17,7 @@ namespace backend.Services
             return await _context.Surnames.ToListAsync();
         }
 
-        public async Task<Surname> GetRandomSurnameAsync()
+        public async Task<string> GetRandomSurnameAsync()
         {
             var totalCountOfSurnames = await _context.Surnames.CountAsync();
             if (totalCountOfSurnames == 0)
@@ -32,7 +32,7 @@ namespace backend.Services
             {
                 throw new InvalidOperationException($"Surname with ID {randomId} not found.");
             }
-            return surname;
+            return surname.text;
         }
     }
 

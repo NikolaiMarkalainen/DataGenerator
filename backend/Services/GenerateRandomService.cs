@@ -7,6 +7,20 @@ namespace backend.Services
 
     public class GenerateRandomService
     {
+        private readonly WordsService _wordsService;
+        private readonly FirstnamesService _firstNamesService;
+
+        private readonly SurnamesService _surnamesService;
+
+        private readonly CountriesService _countriesService;
+
+        public GenerateRandomService(WordsService wordsService, FirstnamesService firstnamesService, SurnamesService surnamesService, CountriesService countriesService)
+        {
+            _wordsService = wordsService;
+            _firstNamesService = firstnamesService;
+            _surnamesService = surnamesService;
+            _countriesService = countriesService;
+        }
 
         public Task<double> GenerateRandomNumber(NumberVariable numberVariable)
         {
@@ -31,9 +45,14 @@ namespace backend.Services
 
             return Task.FromResult(randomNumber);
         }
-        public Task<string> GenerateRandomString(string charactersLength)
+        public async Task<string> GenerateRandomString(OpenString openString)
         {
-            if (!int.TryParse(charactersLength, out int length) || length <= 0)
+            if(openString.Words)
+            {
+                string word = await _wordsService.GetRandomWordAsync();
+                return word;
+            }
+            if (!int.TryParse(openString.CharacterLength, out int length) || length <= 0)
             {
                 throw new ArgumentException("charactersLength must be a positive integer.");
             }
@@ -45,7 +64,7 @@ namespace backend.Services
             {
                 result.Append(chars[random.Next(chars.Length)]);
             }
-            return Task.FromResult(result.ToString());
+            return result.ToString();
         }
         public Task<string> GenerateRandomId(IdEnum idType)
         {
@@ -61,9 +80,25 @@ namespace backend.Services
             }
             throw new ArgumentException("Wrong value for idType");
         }
-        public async Task<string> GenerateObjectToData(FileRequest fileRequest)
+        public async Task<GeneratedData> GenerateObjectToData(FileRequest fileRequest)
         {
-            var result = new StringBuilder();
+            var result = new GeneratedData();
+            var openStringList= new GeneratedOpenStrings();
+
+            // handle multiconditional variables in own loop;
+            foreach (var variable in fileRequest.Variables)
+            {
+                if (variable.Type == DataEnum.RANDOM_COUNTRY && variable.VariableData is CountryString countryString)
+                {
+                    if (countryString.AmountFixed > 0)
+                    {
+                        var countries = await _countriesService.GenerateCountryDataAsync(countryString, fileRequest.Amount);
+                        result.Countries.Name = variable.Name;
+                        result.Countries.Countries = countries;
+                    }
+                }
+            }
+
             for(int i = 0; i < fileRequest.Amount; i++){
             foreach (var variable in fileRequest.Variables)
                 {
@@ -73,41 +108,64 @@ namespace backend.Services
                             if(variable.VariableData is NumberVariable numberVariable)
                             {
                                 double number = await GenerateRandomNumber(numberVariable);
-                                result.AppendLine($"Number Value: {number}"); 
+                                
+                                result.Numbers.Name = variable.Name;
+                                result.Numbers.Numbers.Add(number);
                             }
                             break;
 
                         case DataEnum.OPEN_STRING:
-                            result.AppendLine($"Open String: "); 
+                            if(variable.VariableData is OpenString openString)
+                            {
+                                string text = await GenerateRandomString(openString);
+
+                                result.OpenStrings.Name = variable.Name;
+                                result.OpenStrings.OpenStrings.Add(text);
+                            }
+                            
                             break;
 
                         case DataEnum.FIXED_STRING:
-                            result.AppendLine($"Fixed String: "); 
+                            if(variable.VariableData is FixedStringObject fixedString)
+                            {
+                                result.FixedStrings.Name = variable.Name;
+                                result.FixedStrings.FixedStrings.Add(fixedString.FixedString);
+                            }
                             break;
 
                         case DataEnum.RANDOM_FIRST_NAME:
-                            result.AppendLine($"Random First Name: "); 
+                            if(variable.VariableData is UseProp useProp)
+                            {
+                                string name = await _firstNamesService.GetRandomFirstnameAsync();
+                                result.FirstNames.Name = variable.Name;
+                                result.FirstNames.Firstnames.Add(name); 
+                            }
                             break;
 
                         case DataEnum.RANDOM_LAST_NAME:
-                            result.AppendLine($"Random Last Name:"); 
+                            if(variable.VariableData is UseProp useProp1)
+                            {
+                                string surname = await _surnamesService.GetRandomSurnameAsync();
+                                result.LastNames.Name = variable.Name;
+                                result.LastNames.Lastnames.Add(surname);
+                            }
                             break;
 
-                        case DataEnum.RANDOM_COUNTRY:
-                            result.AppendLine($"Random Country: ");
-                            break;
-
-                        case DataEnum.RANDOM_CUSTOM_OBJECT:
-                            result.AppendLine($"Random Custom Object: ");
-                            break;
+                        // case DataEnum.RANDOM_CUSTOM_OBJECT:
+                        //     break;
 
                         case DataEnum.RANDOM_ID:
-                            result.AppendLine($"Random ID: ");
+                            if(variable.VariableData is IDObject idObject)
+                            {
+                               string id = await GenerateRandomId(idObject.IdType);
+                               result.Ids.Name = variable.Name;
+                               result.Ids.Ids.Add(id);
+                            }
                             break;
                     }
                 };
             }
-            return result.ToString();
+            return result;
         }
     }
 }

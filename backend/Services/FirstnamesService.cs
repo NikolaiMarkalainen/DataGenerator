@@ -16,7 +16,7 @@ namespace backend.Services
             return await _context.Firstnames.ToListAsync();
         }
 
-        public async Task<Firstname> GetRandomFirstnameAsync()
+        public async Task<string> GetRandomFirstnameAsync()
         {
             var totalCountOfNames = await _context.Firstnames.CountAsync();
             if (totalCountOfNames == 0)
@@ -31,7 +31,7 @@ namespace backend.Services
             {
                 throw new InvalidOperationException($"Firstname with ID {randomId} not found.");
             }
-            return firstname;
+            return firstname.text;
         }
     }
 
