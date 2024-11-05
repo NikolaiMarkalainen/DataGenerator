@@ -13,9 +13,11 @@ namespace backend.Services
         private readonly SurnamesService _surnamesService;
 
         private readonly CountriesService _countriesService;
+        private readonly JsonFileService _jsonFileService;
 
-        public GenerateRandomService(WordsService wordsService, FirstnamesService firstnamesService, SurnamesService surnamesService, CountriesService countriesService)
+        public GenerateRandomService(JsonFileService jsonFileService, WordsService wordsService, FirstnamesService firstnamesService, SurnamesService surnamesService, CountriesService countriesService)
         {
+            _jsonFileService = jsonFileService;
             _wordsService = wordsService;
             _firstNamesService = firstnamesService;
             _surnamesService = surnamesService;
@@ -80,7 +82,7 @@ namespace backend.Services
             }
             throw new ArgumentException("Wrong value for idType");
         }
-        public async Task<GeneratedData> GenerateObjectToData(FileRequest fileRequest)
+        public async Task<List<Dictionary<string, object>>> GenerateObjectToData(FileRequest fileRequest)
         {
             var result = new GeneratedData();
             var openStringList= new GeneratedOpenStrings();
@@ -165,7 +167,8 @@ namespace backend.Services
                     }
                 };
             }
-            return result;
+            var json = _jsonFileService.CreateStructuredJsonData(result, fileRequest.Amount);
+            return json;
         }
     }
 }

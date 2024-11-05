@@ -27,6 +27,7 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        options.SerializerSettings.Converters.Add(new VariableDataConverter());
     });
 
 builder.Services.AddScoped<CountriesService>();
@@ -34,7 +35,7 @@ builder.Services.AddScoped<FirstnamesService>();
 builder.Services.AddScoped<SurnamesService>();
 builder.Services.AddScoped<WordsService>();
 builder.Services.AddScoped<GenerateRandomService>();
-
+builder.Services.AddScoped<JsonFileService>();
 builder.Services.AddDbContext<DataDbContext>(options =>
     options.UseNpgsql(databaseUrl));
 
