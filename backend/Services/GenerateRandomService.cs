@@ -61,16 +61,20 @@ namespace backend.Services
             }
             throw new ArgumentException("Wrong value for idType");
         }
-        public Task<string> GenerateObjectToData(FileRequest fileRequest)
+        public async Task<string> GenerateObjectToData(FileRequest fileRequest)
         {
             var result = new StringBuilder();
+            for(int i = 0; i < fileRequest.Amount; i++){
             foreach (var variable in fileRequest.Variables)
                 {
-                    result.AppendLine($"Processing Variable: {variable.Name}");
                     switch (variable.Type)
                     {
                         case DataEnum.NUMBER:
-                            result.AppendLine($"Number Value: "); 
+                            if(variable.VariableData is NumberVariable numberVariable)
+                            {
+                                double number = await GenerateRandomNumber(numberVariable);
+                                result.AppendLine($"Number Value: {number}"); 
+                            }
                             break;
 
                         case DataEnum.OPEN_STRING:
@@ -102,9 +106,8 @@ namespace backend.Services
                             break;
                     }
                 };
-                result.AppendLine($"Amount to generate: {fileRequest.Amount}");
-
-            return Task.FromResult(result.ToString());
+            }
+            return result.ToString();
         }
     }
 }

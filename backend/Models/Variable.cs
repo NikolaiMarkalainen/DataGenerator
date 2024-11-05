@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 
 namespace backend.Models
 {
+    [JsonConverter(typeof(VariableDataConverter))]
     public class VariableData
     {
         // Blank class binding to all other classs to inherit
@@ -31,10 +32,10 @@ namespace backend.Models
     public class FixedStringObject : VariableData
     {
         [JsonProperty("fixedString")]
-        public required string FixedString { get; set; }
+        public string FixedString { get; set; }
     }
 
-    public class DObject : VariableData
+    public class IDObject : VariableData
     {
         [JsonProperty("idType")]
         public IdEnum IdType { get; set; }
@@ -76,12 +77,10 @@ namespace backend.Models
         public string Name { get; set; }
 
         [JsonProperty("type")]
-        public object Type { get; set; } 
+        public DataEnum Type { get; set; } 
 
         [JsonProperty("variableData")]
         public VariableData? VariableData { get; set; }
-        [JsonProperty("amount")]
-        public int Amount { get; set; }
     }
 
     public class FileRequest
