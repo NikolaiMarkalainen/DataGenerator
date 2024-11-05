@@ -1,11 +1,11 @@
-
+using Newtonsoft.Json;
 
 namespace backend.Services
 {
     public class JsonFileService
     {
         
-    public List<Dictionary<string, object>> CreateStructuredJsonData(GeneratedData generatedData, int amount)
+    public string CreateStructuredJsonData(GeneratedData generatedData, int amount)
     {
         var structuredData = new List<Dictionary<string, object>>();
 
@@ -54,8 +54,8 @@ namespace backend.Services
                 structuredData.Add(entry);
             }
         }
-
-        return structuredData;
+        string json = JsonConvert.SerializeObject(structuredData, Formatting.Indented);
+        return json;
     }
     }
 }

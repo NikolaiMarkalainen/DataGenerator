@@ -1,3 +1,4 @@
 data-generation.sln
 obj*/*
 bin*/*
+/backend/generated

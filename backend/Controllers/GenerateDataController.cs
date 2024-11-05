@@ -83,8 +83,13 @@ namespace backend.Controllers
             }
             try
             {
-                var result = await _generateRandomService.GenerateObjectToData(request);
-                return Ok(new {result});
+                var filePath = await _generateRandomService.GenerateObjectToData(request);
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound("The generated file was not found.");
+                }
+                string fileName = Path.GetFileName(filePath);
+                return PhysicalFile(filePath, "application/json", fileName);
             }
             catch(InvalidOperationException ex)
             {

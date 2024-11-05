@@ -29,7 +29,17 @@ export const DataPreview = () => {
         if(amount !== 0)
         {
             try{
-                const response = await axios.post("http://localhost:5300/generate/file", requestBody);
+                const response = await axios.post("http://localhost:5300/generate/file", requestBody, {
+                    responseType: 'blob'
+                });
+                const blob = new Blob([response.data], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `GeneratedData_${new Date().toISOString().slice(0, 19).replace(/T/g, '_')}.json`; 
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(link.href);
                 console.log(response.data);
             } catch(error){
                 console.log(error);

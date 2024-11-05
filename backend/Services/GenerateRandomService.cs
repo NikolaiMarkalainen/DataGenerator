@@ -82,10 +82,9 @@ namespace backend.Services
             }
             throw new ArgumentException("Wrong value for idType");
         }
-        public async Task<List<Dictionary<string, object>>> GenerateObjectToData(FileRequest fileRequest)
+        public async Task<string> GenerateObjectToData(FileRequest fileRequest)
         {
             var result = new GeneratedData();
-            var openStringList= new GeneratedOpenStrings();
 
             // handle multiconditional variables in own loop;
             foreach (var variable in fileRequest.Variables)
@@ -168,7 +167,14 @@ namespace backend.Services
                 };
             }
             var json = _jsonFileService.CreateStructuredJsonData(result, fileRequest.Amount);
-            return json;
+
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "generated"); 
+            Directory.CreateDirectory(directoryPath);
+            string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.json";
+            string filePath = Path.Combine(directoryPath, fileName);
+            await File.WriteAllTextAsync(filePath, json);
+
+            return filePath;
         }
     }
 }
