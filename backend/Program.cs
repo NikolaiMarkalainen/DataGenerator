@@ -35,7 +35,7 @@ builder.Services.AddScoped<FirstnamesService>();
 builder.Services.AddScoped<SurnamesService>();
 builder.Services.AddScoped<WordsService>();
 builder.Services.AddScoped<GenerateRandomService>();
-builder.Services.AddScoped<JsonFileService>();
+builder.Services.AddScoped<FileService>();
 builder.Services.AddDbContext<DataDbContext>(options =>
     options.UseNpgsql(databaseUrl));
 

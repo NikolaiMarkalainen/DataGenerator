@@ -89,5 +89,7 @@ namespace backend.Models
         public List<Variable> Variables {get; set;}
         [JsonProperty("amount")]
         public int Amount { get; set; }
+        [JsonProperty("jsonFile")]
+        public bool JsonFile { get; set; }
     }
 }

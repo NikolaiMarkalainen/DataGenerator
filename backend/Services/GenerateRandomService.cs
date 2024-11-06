@@ -13,11 +13,11 @@ namespace backend.Services
         private readonly SurnamesService _surnamesService;
 
         private readonly CountriesService _countriesService;
-        private readonly JsonFileService _jsonFileService;
+        private readonly FileService _fileService;
 
-        public GenerateRandomService(JsonFileService jsonFileService, WordsService wordsService, FirstnamesService firstnamesService, SurnamesService surnamesService, CountriesService countriesService)
+        public GenerateRandomService(FileService fileService, WordsService wordsService, FirstnamesService firstnamesService, SurnamesService surnamesService, CountriesService countriesService)
         {
-            _jsonFileService = jsonFileService;
+            _fileService = fileService;
             _wordsService = wordsService;
             _firstNamesService = firstnamesService;
             _surnamesService = surnamesService;
@@ -180,13 +180,23 @@ namespace backend.Services
                     }
                 };
             }
-            var json = _jsonFileService.CreateStructuredJsonData(result, fileRequest.Amount);
-
-            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "generated"); 
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "generated");
             Directory.CreateDirectory(directoryPath);
-            string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.json";
-            string filePath = Path.Combine(directoryPath, fileName);
-            await File.WriteAllTextAsync(filePath, json);
+
+            string filePath;
+            if(fileRequest.JsonFile)
+            {
+                var json = _fileService.CreateStructuredJsonData(result, fileRequest.Amount);
+                string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.json";
+                filePath = Path.Combine(directoryPath, fileName);
+                await File.WriteAllTextAsync(filePath, json);
+            }
+            else {
+                var csv = _fileService.CreateStructuredCsvData(result, fileRequest.Amount);
+                string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv";
+                filePath = Path.Combine(directoryPath, fileName);
+                await File.WriteAllTextAsync(filePath, csv);            
+            }
 
             return filePath;
         }
