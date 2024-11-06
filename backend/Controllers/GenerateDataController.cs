@@ -89,7 +89,8 @@ namespace backend.Controllers
                     return NotFound("The generated file was not found.");
                 }
                 string fileName = Path.GetFileName(filePath);
-                return PhysicalFile(filePath, "application/json", fileName);
+                string contentType =  filePath.EndsWith(".json") ? "application/json" : "application/csv";
+                return PhysicalFile(filePath, contentType, fileName);
             }
             catch(InvalidOperationException ex)
             {

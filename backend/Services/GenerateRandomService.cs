@@ -184,20 +184,22 @@ namespace backend.Services
             Directory.CreateDirectory(directoryPath);
 
             string filePath;
-            if(fileRequest.JsonFile)
+            if(fileRequest.JsonFile == true)
             {
                 var json = _fileService.CreateStructuredJsonData(result, fileRequest.Amount);
                 string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.json";
                 filePath = Path.Combine(directoryPath, fileName);
                 await File.WriteAllTextAsync(filePath, json);
             }
-            else {
+            else if(fileRequest.JsonFile == false){
                 var csv = _fileService.CreateStructuredCsvData(result, fileRequest.Amount);
                 string fileName = $"GeneratedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv";
                 filePath = Path.Combine(directoryPath, fileName);
                 await File.WriteAllTextAsync(filePath, csv);            
             }
-
+            else {
+                throw new Exception("Not working");
+            }
             return filePath;
         }
         private async Task<Dictionary<string, object>> GenerateCustomObjectData(CustomObject customObject)
