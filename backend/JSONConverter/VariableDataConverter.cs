@@ -15,12 +15,12 @@ public class VariableDataConverter : JsonCreationConverter<VariableData>
             return new IDObject();
         else if(jObject["fixedString"] != null)
             return new FixedStringObject();
-        else if(jObject["key"] != null && jObject["fixed"] != null && jObject["amountFixed"] != null)
+        else if(jObject["fixed"] != null && jObject["amountFixed"] != null || jObject["key"] != null)  
             return new CountryString();
         else if(jObject["words"] != null)
             return new OpenString();
         else if(jObject["useProperty"] != null)
             return new UseProp();
-        throw new NotImplementedException();
+        throw new NotImplementedException($"Unrecognized VariableData type. JSON data: {jObject}");
     }
 }

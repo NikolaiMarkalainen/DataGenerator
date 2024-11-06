@@ -1,4 +1,6 @@
 
+using backend.Models;
+
 public class GeneratedData
 {
     public GeneratedNumbers Numbers { get; set; } = new GeneratedNumbers();
@@ -8,6 +10,8 @@ public class GeneratedData
     public GeneratedLastNames LastNames { get; set; } = new GeneratedLastNames();
     public GeneratedCountries Countries { get; set; } = new GeneratedCountries();
     public GeneratedIds Ids { get; set; } = new GeneratedIds();
+    public List<GeneratedObjects> CustomObjects { get; set; } = new List<GeneratedObjects>();
+
 }
 
 
@@ -85,5 +89,14 @@ public class GeneratedIds
     public GeneratedIds()
     {
         Ids = new List<string>();
+    }
+}
+public class GeneratedObjects
+{
+    public string Name { get; set; }
+    public Dictionary<string, object> Data { get; set; } 
+    public GeneratedObjects()
+    {
+        Data = new Dictionary<string, object>();
     }
 }

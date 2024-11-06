@@ -70,9 +70,19 @@ namespace backend.Services
             }
             throw new InvalidOperationException("Country not found.");
         }
-        public async Task<List<string>> GenerateCountryDataAsync(CountryString countryString, int amount)
+        public async Task<Object> GenerateCountryDataAsync(CountryString countryString, int amount)
         {
             List<string> countryNames = new List<string>();
+            Random random = new Random();
+            if(countryString.AmountFixed == 1 && amount == 1 && countryString.Fixed)
+            {
+                return countryString.Text;
+            }
+            if(countryString.Fixed == false && amount == 1)
+            {
+                string country = await GetRandomCountryAsync();
+                return country;
+            }
             if (countryString.Fixed && countryString.AmountFixed == 1)
             {
                 for (int i = 0; i < amount; i++)
@@ -85,7 +95,6 @@ namespace backend.Services
             {
                 List<Country> randomCountries = await GetRandomCountriesAsync(countryString.AmountFixed);
 
-                Random random = new Random();
                 for (int i = 0; i < amount; i++)
                 {
                     int randomIndex = random.Next(randomCountries.Count);

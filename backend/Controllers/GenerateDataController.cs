@@ -110,7 +110,7 @@ namespace backend.Controllers
         {"name":"Random First Name","type":3,"variableData":{"useProperty":true}},
         {"name":"Random Last name","type":4,"variableData":{"useProperty":true}},
         {"name":"Random Country","type":5,"variableData":{"text":"Bulgaria","key":"BG","fixed":false,"amountFixed":1}},
-        {"name":"CUstom Object","type":6,"variableData":{"fields":[{"name":"asdasd","type":5,"variableData":{"fixed":false,"amountFixed":1}}]}},
+        {"name":"CUstom Object","type":6,"variableData":{"fields":[{"name":"asdasd","type":5,"variableData":{"fixed":false,"amountFixed":1}{"name":"asdas","type":0,"variableData":{"min":0,"max":10,"decimalPrecision":0,"decimal":false}}]}},
         {"name":"Random Id","type":7,"variableData":{"idType":2}}
     ]
 }

@@ -48,11 +48,19 @@ namespace backend.Services
             {
                 entry[generatedData.Ids.Name] = generatedData.Ids.Ids[i];
             }
-
+            if (i < generatedData.CustomObjects.Count)
+            {
+                var customObject = generatedData.CustomObjects[i];
+                if (!string.IsNullOrEmpty(customObject.Name))
+                {
+                    entry[customObject.Name] = customObject.Data;
+                }
+            }
             if (entry.Count > 0)
             {
                 structuredData.Add(entry);
             }
+
         }
         string json = JsonConvert.SerializeObject(structuredData, Formatting.Indented);
         return json;

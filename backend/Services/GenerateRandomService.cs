@@ -93,7 +93,7 @@ namespace backend.Services
                 {
                     if (countryString.AmountFixed > 0)
                     {
-                        var countries = await _countriesService.GenerateCountryDataAsync(countryString, fileRequest.Amount);
+                         List<string> countries = await _countriesService.GenerateCountryDataAsync(countryString, fileRequest.Amount) as List<string>;
                         result.Countries.Name = variable.Name;
                         result.Countries.Countries = countries;
                     }
@@ -152,8 +152,17 @@ namespace backend.Services
                             }
                             break;
 
-                        // case DataEnum.RANDOM_CUSTOM_OBJECT:
-                        //     break;
+                        case DataEnum.RANDOM_CUSTOM_OBJECT:
+                            if(variable.VariableData is CustomObject customObject)
+                            {
+                                var customData = await GenerateCustomObjectData(customObject);
+                                result.CustomObjects.Add(new GeneratedObjects
+                                {
+                                    Name = variable.Name,
+                                    Data = customData
+                                });
+                            }
+                             break;
 
                         case DataEnum.RANDOM_ID:
                             if(variable.VariableData is IDObject idObject)
@@ -163,6 +172,11 @@ namespace backend.Services
                                result.Ids.Ids.Add(id);
                             }
                             break;
+                        case DataEnum.RANDOM_COUNTRY:
+                        break;
+
+                        default:
+                        throw new NotSupportedException($"Unhandled type: {variable.Type}");
                     }
                 };
             }
@@ -176,5 +190,86 @@ namespace backend.Services
 
             return filePath;
         }
+        private async Task<Dictionary<string, object>> GenerateCustomObjectData(CustomObject customObject)
+        {
+            var customData = new Dictionary<string, object>();
+            foreach (var variable in customObject.Fields)
+            {
+                if (variable.Type == DataEnum.RANDOM_COUNTRY && variable.VariableData is CountryString countryString)
+                {
+                    if (countryString.AmountFixed > 0)
+                    {
+                        var countries = await _countriesService.GenerateCountryDataAsync(countryString, 1);
+                        customData[variable.Name] = countries;
+                    }
+                }
+            }
+            foreach (var field in customObject.Fields)
+            {
+                switch (field.Type)
+                {
+                    case DataEnum.NUMBER:
+                        if (field.VariableData is NumberVariable numberVariable)
+                        {
+                            double number = await GenerateRandomNumber(numberVariable);
+                            customData[field.Name] = number;
+                        }
+                        break;
+
+                    case DataEnum.OPEN_STRING:
+                        if (field.VariableData is OpenString openString)
+                        {
+                            string text = await GenerateRandomString(openString);
+                            customData[field.Name] = text;
+                        }
+                        break;
+
+                    case DataEnum.FIXED_STRING:
+                        if (field.VariableData is FixedStringObject fixedString)
+                        {
+                            customData[field.Name] = fixedString.FixedString;
+                        }
+                        break;
+
+                    case DataEnum.RANDOM_FIRST_NAME:
+                        if (field.VariableData is UseProp)
+                        {
+                            string name = await _firstNamesService.GetRandomFirstnameAsync();
+                            customData[field.Name] = name;
+                        }
+                        break;
+
+                    case DataEnum.RANDOM_LAST_NAME:
+                        if (field.VariableData is UseProp)
+                        {
+                            string surname = await _surnamesService.GetRandomSurnameAsync();
+                            customData[field.Name] = surname;
+                        }
+                        break;
+
+                    case DataEnum.RANDOM_ID:
+                        if (field.VariableData is IDObject idObject)
+                        {
+                            string id = await GenerateRandomId(idObject.IdType);
+                            customData[field.Name] = id;
+                        }
+                        break;
+
+                    case DataEnum.RANDOM_CUSTOM_OBJECT:
+                        if (field.VariableData is CustomObject nestedCustomObject)
+                        {
+                            customData[field.Name] = await GenerateCustomObjectData(nestedCustomObject);
+                        }
+                        break;
+                    case DataEnum.RANDOM_COUNTRY:
+                    break;
+
+                    default:
+                        throw new NotSupportedException($"Unhandled type: {field.Type}");
+                }
+            }
+
+            return customData;
+        }   
     }
 }
