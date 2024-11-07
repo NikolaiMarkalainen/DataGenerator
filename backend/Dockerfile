@@ -5,7 +5,6 @@ WORKDIR /backend
 ENV ASPNETCORE_ENVIRONMENT=Development
 
 COPY . .
-COPY Directory.Build.props .
 
 RUN apt-get update && apt-get -y install sudo
 

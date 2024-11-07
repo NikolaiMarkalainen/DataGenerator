@@ -24,7 +24,6 @@ _ReSharper*/
 .idea/
 *.sln.iml
 *.csproj.DotSettings.user
-.env
 
 app/*
 backend
